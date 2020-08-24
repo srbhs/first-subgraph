@@ -4,7 +4,8 @@ import {
   MintFinished as MintFinishedEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
   Approval as ApprovalEvent,
-  Transfer as TransferEvent
+  Transfer as TransferEvent,
+  TransferFromCall
 } from "../generated/Contract/Contract"
 import {
   Burn,
@@ -12,8 +13,10 @@ import {
   MintFinished,
   OwnershipTransferred,
   Approval,
-  Transfer
+  Transfer,
+  Block
 } from "../generated/schema"
+import { ethereum } from "@graphprotocol/graph-ts"
 
 export function handleBurn(event: BurnEvent): void {
   let entity = new Burn(
@@ -69,5 +72,19 @@ export function handleTransfer(event: TransferEvent): void {
   entity.from = event.params.from
   entity.to = event.params.to
   entity.value = event.params.value
+  entity.save()
+}
+
+export function handleTransferFrom(call: TransferFromCall): void {
+  let entity = new Transfer(call.transaction.hash.toHex())
+  entity.from = call.inputs._from
+  entity.to = call.inputs._to
+  entity.value = call.inputs._value
+  entity.save()
+}
+
+export function handleBlock(block: ethereum.Block): void {
+  let id = block.hash.toHex()
+  let entity = new Block(id)
   entity.save()
 }
