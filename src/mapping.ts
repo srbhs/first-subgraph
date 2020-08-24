@@ -88,6 +88,9 @@ export function handleBlock(block: ethereum.Block): void {
   let id = block.hash.toHex()
   let entity = new Block(id)
   let contract = Contract.bind(Address.fromString("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf"))
-  entity.totalSupply = contract.totalSupply()
+  let res = contract.try_totalSupply()
+  if (!res.reverted) {  
+    entity.totalSupply = res.value
+  }
   entity.save()
 }
