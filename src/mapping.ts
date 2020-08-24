@@ -5,7 +5,8 @@ import {
   OwnershipTransferred as OwnershipTransferredEvent,
   Approval as ApprovalEvent,
   Transfer as TransferEvent,
-  TransferFromCall
+  TransferFromCall,
+  Contract
 } from "../generated/Contract/Contract"
 import {
   Burn,
@@ -16,7 +17,7 @@ import {
   Transfer,
   Block
 } from "../generated/schema"
-import { ethereum } from "@graphprotocol/graph-ts"
+import { ethereum, Address } from "@graphprotocol/graph-ts"
 
 export function handleBurn(event: BurnEvent): void {
   let entity = new Burn(
@@ -86,5 +87,7 @@ export function handleTransferFrom(call: TransferFromCall): void {
 export function handleBlock(block: ethereum.Block): void {
   let id = block.hash.toHex()
   let entity = new Block(id)
+  let contract = Contract.bind(Address.fromString("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf"))
+  entity.totalSupply = contract.totalSupply()
   entity.save()
 }

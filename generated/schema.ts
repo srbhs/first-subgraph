@@ -338,4 +338,13 @@ export class Block extends Entity {
   set id(value: string) {
     this.set("id", Value.fromString(value));
   }
+
+  get totalSupply(): BigInt {
+    let value = this.get("totalSupply");
+    return value.toBigInt();
+  }
+
+  set totalSupply(value: BigInt) {
+    this.set("totalSupply", Value.fromBigInt(value));
+  }
 }

@@ -36,4 +36,5 @@ type Transfer @entity {
 
 type Block @entity {
   id: ID!
+  totalSupply: BigInt!
 }
